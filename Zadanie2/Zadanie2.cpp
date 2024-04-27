@@ -48,9 +48,13 @@ struct BinaryOperation : Expression // «Бинарная операция»
 	};
 	// в конструкторе надо указать 2 операнда — левый и правый, а также сам символ операции
 	BinaryOperation(Expression const* left, int op, Expression const* right) : left_(left), op_(op), right_(right)
-	{ assert(left_ && right_); }
+	{
+		assert(left_ && right_);
+	}
 	~BinaryOperation() //в деструкторе освободим занятую память
-	{ delete left_; delete right_; }
+	{
+		delete left_; delete right_;
+	}
 	Expression const* left() const { return left_; } // чтение левого операнда
 	Expression const* right() const { return right_; } // чтение правого операнда
 	int operation() const { return op_; } // чтение символа операции
@@ -60,16 +64,19 @@ struct BinaryOperation : Expression // «Бинарная операция»
 		double right = right_->evaluate(); // вычисляем правую часть
 		switch (op_) // в зависимости от вида операции, складываем, вычитаем, умножаем или делим левую и правую части
 		{
-			case PLUS: return left + right;
-			case MINUS: return left - right;
-			case DIV: return left / right;
-			case MUL: return left * right;
+		case PLUS: return left + right;
+		case MINUS: return left - right;
+		case DIV: return left / right;
+		case MUL: return left * right;
 		}
 	}
 	Expression* transform(Transformer* tr) const
-	{ return tr->transformBinaryOperation(this); }
+	{
+		return tr->transformBinaryOperation(this);
+	}
 	std::string print() const {
-		return this->left_->print() + std::string(1, this->op_) + this->right_->print(); }
+		return this->left_->print() + std::string(1, this->op_) + this->right_->print();
+	}
 private:
 	Expression const* left_; // указатель на левый операнд
 	Expression const* right_; // указатель на правый операнд
@@ -83,19 +90,24 @@ struct FunctionCall : Expression // структура «Вызов функци
 	{
 		assert(arg_);
 		assert(name_ == "sqrt" || name_ == "abs"); // разрешены только вызов sqrt и abs
-	} 
-	std::string const& name() const 
-	{ return name_; }
+	}
+	std::string const& name() const
+	{
+		return name_;
+	}
 	Expression const* arg() const // чтение аргумента функции
-	{ return arg_; }
+	{
+		return arg_;
+	}
 	~FunctionCall() { delete arg_; } // освобождаем память в деструкторе
 	virtual double evaluate() const { // реализация виртуального метода «вычислить»
 		if (name_ == "sqrt")
 			return sqrt(arg_->evaluate()); // либо вычисляем корень квадратный
 		else return fabs(arg_->evaluate()); // либо модуль — остальные функции запрещены
-	} 
+	}
 	std::string print() const {
-		return this->name_ + "(" + this->arg_->print() + ")"; }
+		return this->name_ + "(" + this->arg_->print() + ")";
+	}
 	Expression* transform(Transformer* tr) const
 	{ return tr->transformFunctionCall(this); }
 private:
@@ -109,32 +121,67 @@ struct Variable : Expression // структура «Переменная»
 	std::string const& name() const { return name_; } // чтение имени переменной
 	double evaluate() const // реализация виртуального метода «вычислить»
 	{ return 0.0; }
-	std::string print() const {
-		return this->name_; }
+	std::string print() const { return this->name_; }
 	Expression* transform(Transformer* tr) const
 	{ return tr->transformVariable(this); }
 private:
 	std::string const name_; // имя переменной
 };
 
-struct CopySyntaxTree : Transformer
+struct FoldConstants : Transformer
 {
 	Expression* transformNumber(Number const* number)
-	{ Expression* exp = new Number(number->value()); return exp; }
+	{
+		Expression* exp = new Number(number->value());
+		return exp;
+		// числа не сворачиваются, поэтому просто возвращаем копию
+	}
 	Expression* transformBinaryOperation(BinaryOperation const* binop)
 	{
-		Expression* exp = new BinaryOperation((binop->left())->transform(this), binop->operation(),
-			(binop->right())->transform(this));
-		return exp;
+		// Создаем указатели на левое и правое выражение
+		Expression* nleft = (binop->left())->transform(this); // переход в левый операнд, чтобы свернуть
+		Expression* nright = (binop->right())->transform(this); // переход в правый операнд, чтобы свернуть
+		int noperation = binop->operation();
+
+		// Создаем новый объект типа BinaryOperation с новыми указателями
+		BinaryOperation* nbinop = new BinaryOperation(nleft, noperation, nright);
+		// Проверка на приводимость указателей к типу Number
+		Number* nleft_is_number = dynamic_cast<Number*>(nleft);
+		Number* nright_is_number = dynamic_cast<Number*>(nright);
+		if (nleft_is_number && nright_is_number) {
+			// Вычисляем значение выражения
+			Expression* result = new Number(binop->evaluate());
+			delete nbinop;
+			return result;
+		}
+		else return nbinop;
+
 	}
 	Expression* transformFunctionCall(FunctionCall const* fcall)
 	{
-		Expression* exp = new FunctionCall(fcall->name(), (fcall->arg())->transform(this));
-		return exp;
+		// Указатель на аргумент
+		Expression* arg = (fcall->arg())->transform(this);// рекурсивно сворачиваем аргумент
+		std::string const& nname = fcall->name();
+
+		// Объект типа FunctionCall с новым указателем
+		FunctionCall* nfcall = new FunctionCall(nname, arg);
+
+		// Проверка на приводимость указателя к типу Number
+		Number* arg_is_number = dynamic_cast<Number*>(arg);
+		if (arg_is_number) { // если аргумент — число вычисляем значение выражения
+			Expression* result = new Number(fcall->evaluate());
+			delete nfcall;
+			return result;
+		}
+		else return nfcall;
 	}
 	Expression* transformVariable(Variable const* var)
-	{ Expression* exp = new Variable(var->name()); return exp; }
-	~CopySyntaxTree() { };
+	{
+		Expression* exp = new Variable(var->name());
+		return exp;
+		// переменные не сворачиваем, поэтому просто возвращаем копию
+	}
+	~FoldConstants() { };
 };
 
 int main()
@@ -146,6 +193,6 @@ int main()
 	Variable* var = new Variable("var");
 	BinaryOperation* mult = new BinaryOperation(var, BinaryOperation::MUL, callSqrt);
 	FunctionCall* callAbs = new FunctionCall("abs", mult);
-	CopySyntaxTree CST;
-	Expression* newExpr = callAbs->transform(&CST);
+	FoldConstants FC;
+	Expression* newExpr = callAbs->transform(&FC);
 }
