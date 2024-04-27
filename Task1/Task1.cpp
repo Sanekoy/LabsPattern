@@ -90,8 +90,7 @@ struct FunctionCall : Expression // структура «Вызов функци
 	{ return arg_; }
 	~FunctionCall() { delete arg_; } // освобождаем память в деструкторе
 	virtual double evaluate() const { // реализация виртуального метода «вычислить»
-		if (name_ == "sqrt")
-			return sqrt(arg_->evaluate()); // либо вычисляем корень квадратный
+		if (name_ == "sqrt") return sqrt(arg_->evaluate()); // либо вычисляем корень квадратный
 		else return fabs(arg_->evaluate()); // либо модуль — остальные функции запрещены
 	} 
 	std::string print() const {
