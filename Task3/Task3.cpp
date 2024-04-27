@@ -1,8 +1,8 @@
 ﻿/*Вариант 7 Дан рецепт(точнее, состав блюда) : шампиньоны(500г), креветки (100г), сметана(30г), сыр(20г), укроп и пряности(30г).
     Для каждого продукта известны(на 100г продукта) энергетическая ценность, количество белков, жиров и углеводов, а также стоимость 100 г продукта.
-    Шампиньоны — 27 кКал, 4, 4г белки, 1г жиры, 0, 2г углеводы, 20 руб
+    Шампиньоны — 27 кКал, 4,4г белки, 1г жиры, 0, 2г углеводы, 20 руб
     Креветки — 83 кКал, 18г белки, 1 г жиры, 0г углеводы, 50 руб
-    Сметана — 120 кКал, 3, 3г белки, 10 г жиры, 3, 3 г углеводы, 14 руб 40 коп
+    Сметана — 120 кКал, 3,3г белки, 10 г жиры, 3, 3 г углеводы, 14 руб 40 коп
     Сыр — 345 кКал, 25 г белки, 25 г жиры, 0 г углеводы, 70 руб
     Укроп и пряности — 37 кКал, 3.3 г белки, 0 г жиры, 7 г углеводы, 20 руб
     Напишите иерархию классов «Продукты» и класс(или структуру) «Рецепт блюда».
@@ -32,51 +32,81 @@ public:
 // Шампиньоны
 class Mushrooms : public Product {
 public:
-    double getCaloriesPer100g() const { return 27.0; }
-    double getProteinsPer100g() const { return 4.4; }
-    double getFatsPer100g() const { return 1.0; }
-    double getCarbsPer100g() const { return 0.2; }
-    double getPricePer100g() const { return 20.0; }
+    double getCaloriesPer100g() { return CaloriesPer100g; }
+    double getProteinsPer100g() { return ProteinsPer100g; }
+    double getFatsPer100g() { return FatsPer100g; }
+    double getCarbsPer100g() { return CarbsPer100g; }
+    double getPricePer100g() { return PricePer100g; }
+private:
+    double CaloriesPer100g = 27.0;
+    double ProteinsPer100g = 4.4;
+    double FatsPer100g = 1.0;
+    double CarbsPer100g = 0.2;
+    double PricePer100g = 20.0;
 };
 
 // Креветки
 class Shrimp : public Product {
 public:
-    double getCaloriesPer100g() const { return 83.0; }
-    double getProteinsPer100g() const { return 18.0; }
-    double getFatsPer100g() const { return 1.0; }
-    double getCarbsPer100g() const { return 0.0; }
-    double getPricePer100g() const { return 50.0; }
+    double getCaloriesPer100g() { return CaloriesPer100g; }
+    double getProteinsPer100g() { return ProteinsPer100g; }
+    double getFatsPer100g() { return FatsPer100g; }
+    double getCarbsPer100g() { return CarbsPer100g; }
+    double getPricePer100g() { return PricePer100g; }
+private:
+    double CaloriesPer100g = 83.0;
+    double ProteinsPer100g = 18.0;
+    double FatsPer100g = 1.0;
+    double CarbsPer100g = 0.0;
+    double PricePer100g = 50.0;
 };
 
 // Сметана
 class SourCream : public Product {
 public:
-    double getCaloriesPer100g() const { return 120.0; }
-    double getProteinsPer100g() const { return 3.3; }
-    double getFatsPer100g() const { return 10.0; }
-    double getCarbsPer100g() const { return 3.3; }
-    double getPricePer100g() const { return 14.4; }
+    double getCaloriesPer100g() { return CaloriesPer100g; }
+    double getProteinsPer100g() { return ProteinsPer100g; }
+    double getFatsPer100g() { return FatsPer100g; }
+    double getCarbsPer100g() { return CarbsPer100g; }
+    double getPricePer100g() { return PricePer100g; }
+private:
+    double CaloriesPer100g = 120.0;
+    double ProteinsPer100g = 3.3;
+    double FatsPer100g = 1.00;
+    double CarbsPer100g = 3.3;
+    double PricePer100g = 14.4;
 };
 
 // Сыр
 class Cheese : public Product {
 public:
-    double getCaloriesPer100g() const { return 345.0; }
-    double getProteinsPer100g() const { return 25.0; }
-    double getFatsPer100g() const { return 25.0; }
-    double getCarbsPer100g() const { return 0.0; }
-    double getPricePer100g() const { return 70.0; }
+    double getCaloriesPer100g() { return CaloriesPer100g; }
+    double getProteinsPer100g() { return ProteinsPer100g; }
+    double getFatsPer100g() { return FatsPer100g; }
+    double getCarbsPer100g() { return CarbsPer100g; }
+    double getPricePer100g() { return PricePer100g; }
+private:
+    double CaloriesPer100g = 345.0;
+    double ProteinsPer100g = 25.0;
+    double FatsPer100g = 25.0;
+    double CarbsPer100g = 0.0;
+    double PricePer100g = 70.0;
 };
 
 // Укроп и пряности
 class Greens : public Product {
 public:
-    double getCaloriesPer100g() const { return 37.0; }
-    double getProteinsPer100g() const { return 3.3; }
-    double getFatsPer100g() const { return 0.0; }
-    double getCarbsPer100g() const { return 7.0; }
-    double getPricePer100g() const { return 20.0; } 
+    double getCaloriesPer100g() { return CaloriesPer100g; }
+    double getProteinsPer100g() { return ProteinsPer100g; }
+    double getFatsPer100g() { return FatsPer100g; }
+    double getCarbsPer100g() { return CarbsPer100g; }
+    double getPricePer100g() { return PricePer100g; }
+private:
+    double CaloriesPer100g = 37.0;
+    double ProteinsPer100g = 3.3;
+    double FatsPer100g = 0.0;
+    double CarbsPer100g = 7.0;
+    double PricePer100g = 20.0;
 };
 
 //Рецепт блюда

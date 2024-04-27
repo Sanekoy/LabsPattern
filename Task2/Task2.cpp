@@ -109,7 +109,9 @@ struct FunctionCall : Expression // структура «Вызов функци
 		return this->name_ + "(" + this->arg_->print() + ")";
 	}
 	Expression* transform(Transformer* tr) const
-	{ return tr->transformFunctionCall(this); }
+	{
+		return tr->transformFunctionCall(this);
+	}
 private:
 	std::string const name_; // имя функции
 	Expression const* arg_; // указатель на ее аргумент
@@ -120,10 +122,14 @@ struct Variable : Expression // структура «Переменная»
 	Variable(std::string const& name) : name_(name) { } //в конструкторе надо указать ее имя
 	std::string const& name() const { return name_; } // чтение имени переменной
 	double evaluate() const // реализация виртуального метода «вычислить»
-	{ return 0.0; }
+	{
+		return 0.0;
+	}
 	std::string print() const { return this->name_; }
 	Expression* transform(Transformer* tr) const
-	{ return tr->transformVariable(this); }
+	{
+		return tr->transformVariable(this);
+	}
 private:
 	std::string const name_; // имя переменной
 };
