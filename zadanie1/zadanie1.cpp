@@ -121,28 +121,20 @@ private:
 struct CopySyntaxTree : Transformer
 {
 	Expression* transformNumber(Number const* number)
-	{
-		Expression* exp = new Number(number->value());
-		return exp;
-	}
+	{ Expression* exp = new Number(number->value()); return exp; }
 	Expression* transformBinaryOperation(BinaryOperation const* binop)
 	{
-		Expression* exp = new BinaryOperation((binop->left())->transform(this),
-			binop->operation(),
+		Expression* exp = new BinaryOperation((binop->left())->transform(this), binop->operation(),
 			(binop->right())->transform(this));
 		return exp;
 	}
 	Expression* transformFunctionCall(FunctionCall const* fcall)
 	{
-		Expression* exp = new FunctionCall(fcall->name(),
-			(fcall->arg())->transform(this));
+		Expression* exp = new FunctionCall(fcall->name(), (fcall->arg())->transform(this));
 		return exp;
 	}
 	Expression* transformVariable(Variable const* var)
-	{
-		Expression* exp = new Variable(var->name());
-		return exp;
-	}
+	{ Expression* exp = new Variable(var->name()); return exp; }
 	~CopySyntaxTree() { };
 };
 
