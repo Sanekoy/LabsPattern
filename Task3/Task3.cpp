@@ -1,4 +1,5 @@
-﻿/*Вариант 7 Дан рецепт(точнее, состав блюда) : шампиньоны(500г), креветки (100г), сметана(30г), сыр(20г), укроп и пряности(30г).
+﻿/*Вариант 7 
+    Дан рецепт(точнее, состав блюда) : шампиньоны(500г), креветки (100г), сметана(30г), сыр(20г), укроп и пряности(30г).
     Для каждого продукта известны(на 100г продукта) энергетическая ценность, количество белков, жиров и углеводов, а также стоимость 100 г продукта.
     Шампиньоны — 27 кКал, 4,4г белки, 1г жиры, 0, 2г углеводы, 20 руб
     Креветки — 83 кКал, 18г белки, 1 г жиры, 0г углеводы, 50 руб
@@ -13,100 +14,62 @@
     4. количество углеводов в блюде
     5. стоимость блюда*/
 
-
 #include <iostream>
 #include <vector>
 #include <string>
+#include <locale.h>
 using namespace std;
 
 // Базовый класс для всех продуктов
 class Product {
 public:
-    virtual double getCaloriesPer100g() const = 0; //калории на 100г
-    virtual double getProteinsPer100g() const = 0; //белки на 100г
-    virtual double getFatsPer100g() const = 0; //жиры на 100г
-    virtual double getCarbsPer100g() const = 0; //углеводы на 100г
-    virtual double getPricePer100g() const = 0; //стоимость
+    Product() = default;
+    Product(double calories, double proteins, double fats, double carbs, double price)
+        : CaloriesPer100g(calories), ProteinsPer100g(proteins), FatsPer100g(fats),
+        CarbsPer100g(carbs), PricePer100g(price) {}
+
+    double getCaloriesPer100g() { return CaloriesPer100g; }
+    double getProteinsPer100g() { return ProteinsPer100g; }
+    double getFatsPer100g() { return FatsPer100g; }
+    double getCarbsPer100g() { return CarbsPer100g; }
+    double getPricePer100g() { return PricePer100g; }
+
+private:
+    double CaloriesPer100g;
+    double ProteinsPer100g;
+    double FatsPer100g;
+    double CarbsPer100g;
+    double PricePer100g;
 };
 
 // Шампиньоны
 class Mushrooms : public Product {
 public:
-    double getCaloriesPer100g() { return CaloriesPer100g; }
-    double getProteinsPer100g() { return ProteinsPer100g; }
-    double getFatsPer100g() { return FatsPer100g; }
-    double getCarbsPer100g() { return CarbsPer100g; }
-    double getPricePer100g() { return PricePer100g; }
-private:
-    double CaloriesPer100g = 27.0;
-    double ProteinsPer100g = 4.4;
-    double FatsPer100g = 1.0;
-    double CarbsPer100g = 0.2;
-    double PricePer100g = 20.0;
+    Mushrooms() : Product(27.0, 4.4, 1.0, 0.2, 20.0) {}
 };
 
 // Креветки
 class Shrimp : public Product {
 public:
-    double getCaloriesPer100g() { return CaloriesPer100g; }
-    double getProteinsPer100g() { return ProteinsPer100g; }
-    double getFatsPer100g() { return FatsPer100g; }
-    double getCarbsPer100g() { return CarbsPer100g; }
-    double getPricePer100g() { return PricePer100g; }
-private:
-    double CaloriesPer100g = 83.0;
-    double ProteinsPer100g = 18.0;
-    double FatsPer100g = 1.0;
-    double CarbsPer100g = 0.0;
-    double PricePer100g = 50.0;
+    Shrimp() : Product(83.0, 18.0, 1.0, 0.0, 50.0) {}
 };
 
 // Сметана
 class SourCream : public Product {
 public:
-    double getCaloriesPer100g() { return CaloriesPer100g; }
-    double getProteinsPer100g() { return ProteinsPer100g; }
-    double getFatsPer100g() { return FatsPer100g; }
-    double getCarbsPer100g() { return CarbsPer100g; }
-    double getPricePer100g() { return PricePer100g; }
-private:
-    double CaloriesPer100g = 120.0;
-    double ProteinsPer100g = 3.3;
-    double FatsPer100g = 1.00;
-    double CarbsPer100g = 3.3;
-    double PricePer100g = 14.4;
+    SourCream() : Product(120.0, 3.3, 10.0, 3.3, 14.4) {}
 };
 
 // Сыр
 class Cheese : public Product {
 public:
-    double getCaloriesPer100g() { return CaloriesPer100g; }
-    double getProteinsPer100g() { return ProteinsPer100g; }
-    double getFatsPer100g() { return FatsPer100g; }
-    double getCarbsPer100g() { return CarbsPer100g; }
-    double getPricePer100g() { return PricePer100g; }
-private:
-    double CaloriesPer100g = 345.0;
-    double ProteinsPer100g = 25.0;
-    double FatsPer100g = 25.0;
-    double CarbsPer100g = 0.0;
-    double PricePer100g = 70.0;
+    Cheese() : Product(345.0, 25.0, 25.0, 0.0, 70.0) {}
 };
 
 // Укроп и пряности
 class Greens : public Product {
 public:
-    double getCaloriesPer100g() { return CaloriesPer100g; }
-    double getProteinsPer100g() { return ProteinsPer100g; }
-    double getFatsPer100g() { return FatsPer100g; }
-    double getCarbsPer100g() { return CarbsPer100g; }
-    double getPricePer100g() { return PricePer100g; }
-private:
-    double CaloriesPer100g = 37.0;
-    double ProteinsPer100g = 3.3;
-    double FatsPer100g = 0.0;
-    double CarbsPer100g = 7.0;
-    double PricePer100g = 20.0;
+    Greens() : Product(37.0, 3.3, 0.0, 7.0, 20.0) {}
 };
 
 //Рецепт блюда
@@ -119,7 +82,7 @@ public:
     // Посетитель для подсчета характеристик блюда
     class NutritionalInfoVisitor {
     public:
-        void visit(const Recipe& recipe) {
+        void visit(Recipe& recipe) {
             totalCalories = 0.0;
             totalProteins = 0.0;
             totalFats = 0.0;
@@ -134,11 +97,11 @@ public:
             }
         }
 
-        double getTotalCalories() const { return totalCalories; }
-        double getTotalProteins() const { return totalProteins; }
-        double getTotalFats() const { return totalFats; }
-        double getTotalCarbs() const { return totalCarbs; }
-        double getTotalCost() const { return totalCost; }
+        double getTotalCalories() { return totalCalories; }
+        double getTotalProteins() { return totalProteins; }
+        double getTotalFats() { return totalFats; }
+        double getTotalCarbs() { return totalCarbs; }
+        double getTotalCost() { return totalCost; }
 
     private:
         double totalCalories;
@@ -149,7 +112,7 @@ public:
     };
 
     // Метод для принятия посетителя
-    void accept(NutritionalInfoVisitor& visitor) const {
+    void accept(NutritionalInfoVisitor& visitor) {
         visitor.visit(*this);
     }
 
@@ -158,6 +121,8 @@ private:
 };
 
 int main() {
+    setlocale(LC_ALL, "Russian");
+
     // Создание продуктов
     Mushrooms mushrooms;
     Shrimp shrimp;
@@ -178,16 +143,13 @@ int main() {
     // Подсчет характеристик блюда
     recipe.accept(visitor);
 
-    double totalCost = visitor.getTotalCost();
-    int rub = static_cast<int>(totalCost);
-    int kop = static_cast<int>((totalCost - rub) * 100);
-
     // Вывод результатов
-    cout << "Total Calories: " << visitor.getTotalCalories() << " kCal" << endl;
-    cout << "Total Proteins: " << visitor.getTotalProteins() << " g" << endl;
-    cout << "Total Fats: " << visitor.getTotalFats() << " g" << endl;
-    cout << "Total Carbs: " << visitor.getTotalCarbs() << " g" << endl;
-    cout << "Total Cost: " << rub << " rub " << kop << " kop" << endl;
+    cout << "Характеристики блюда:\n";
+    cout << "1. Калорийность:\t\t " << visitor.getTotalCalories() << " kCal\n";
+    cout << "2. Количество белков:\t\t " << visitor.getTotalProteins() << " g\n";
+    cout << "3. Количество жиров:\t\t " << visitor.getTotalFats() << " g\n";
+    cout << "4. Количество углеводов:\t " << visitor.getTotalCarbs() << " g\n";
+    cout << "5. Стоимость:\t\t\t " << visitor.getTotalCost() << " rub\n";
 
     return 0;
 }
