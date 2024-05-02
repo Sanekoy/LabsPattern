@@ -1,9 +1,9 @@
 ﻿/*Вариант 7 
     Дан рецепт(точнее, состав блюда) : шампиньоны(500г), креветки (100г), сметана(30г), сыр(20г), укроп и пряности(30г).
     Для каждого продукта известны(на 100г продукта) энергетическая ценность, количество белков, жиров и углеводов, а также стоимость 100 г продукта.
-    Шампиньоны — 27 кКал, 4,4г белки, 1г жиры, 0, 2г углеводы, 20 руб
+    Шампиньоны — 27 кКал, 4.4г белки, 1г жиры, 0.2г углеводы, 20 руб
     Креветки — 83 кКал, 18г белки, 1 г жиры, 0г углеводы, 50 руб
-    Сметана — 120 кКал, 3,3г белки, 10 г жиры, 3, 3 г углеводы, 14 руб 40 коп
+    Сметана — 120 кКал, 3.3г белки, 10 г жиры, 3.3 г углеводы, 14 руб 40 коп
     Сыр — 345 кКал, 25 г белки, 25 г жиры, 0 г углеводы, 70 руб
     Укроп и пряности — 37 кКал, 3.3 г белки, 0 г жиры, 7 г углеводы, 20 руб
     Напишите иерархию классов «Продукты» и класс(или структуру) «Рецепт блюда».
@@ -18,6 +18,7 @@
 #include <vector>
 #include <string>
 #include <locale.h>
+#include <iomanip>
 using namespace std;
 
 // Базовый класс для всех продуктов
@@ -28,18 +29,18 @@ public:
         : CaloriesPer100g(calories), ProteinsPer100g(proteins), FatsPer100g(fats),
         CarbsPer100g(carbs), PricePer100g(price) {}
 
-    double getCaloriesPer100g() { return CaloriesPer100g; }
-    double getProteinsPer100g() { return ProteinsPer100g; }
-    double getFatsPer100g() { return FatsPer100g; }
-    double getCarbsPer100g() { return CarbsPer100g; }
-    double getPricePer100g() { return PricePer100g; }
+    double getCaloriesPer100g() const { return CaloriesPer100g; }
+    double getProteinsPer100g() const { return ProteinsPer100g; }
+    double getFatsPer100g() const { return FatsPer100g; }
+    double getCarbsPer100g() const { return CarbsPer100g; }
+    double getPricePer100g() const { return PricePer100g; }
 
 private:
-    double CaloriesPer100g;
-    double ProteinsPer100g;
-    double FatsPer100g;
-    double CarbsPer100g;
-    double PricePer100g;
+    double CaloriesPer100g; //Энергетическая ценность на 100г
+    double ProteinsPer100g; //Кол-во белков на 100г
+    double FatsPer100g;     //Кол-во жиров на 100г
+    double CarbsPer100g;    //Кол-во углеводов на 100г
+    double PricePer100g;    //Стоимость на 100г
 };
 
 // Шампиньоны
@@ -82,7 +83,7 @@ public:
     // Посетитель для подсчета характеристик блюда
     class NutritionalInfoVisitor {
     public:
-        void visit(Recipe& recipe) {
+        void visit(const Recipe& recipe) {
             totalCalories = 0.0;
             totalProteins = 0.0;
             totalFats = 0.0;
@@ -104,11 +105,11 @@ public:
         double getTotalCost() { return totalCost; }
 
     private:
-        double totalCalories;
-        double totalProteins;
-        double totalFats;
-        double totalCarbs;
-        double totalCost;
+        double totalCalories;   //Энергетическая ценность блюда
+        double totalProteins;   //Кол-во белков в блюде
+        double totalFats;       //Кол-во жиров в блюде
+        double totalCarbs;      //Кол-во углеводов в блюде
+        double totalCost;       //Стоимость блюда
     };
 
     // Метод для принятия посетителя
@@ -149,7 +150,7 @@ int main() {
     cout << "2. Количество белков:\t\t " << visitor.getTotalProteins() << " g\n";
     cout << "3. Количество жиров:\t\t " << visitor.getTotalFats() << " g\n";
     cout << "4. Количество углеводов:\t " << visitor.getTotalCarbs() << " g\n";
-    cout << "5. Стоимость:\t\t\t " << visitor.getTotalCost() << " rub\n";
+    cout << "5. Стоимость:\t\t\t " << fixed << setprecision(2) << visitor.getTotalCost() << " rub\n";
 
     return 0;
 }
